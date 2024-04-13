@@ -3,8 +3,11 @@
 Log filtering with regex
 """
 import re
-from typing import List
+from typing import List, Tuple
 import logging
+
+
+PII_FIELDS: Tuple[str, ...] = ('name', 'email', 'phone', 'ssn', 'password',)
 
 
 def filter_datum(fields: List[str], redaction: str,
@@ -41,3 +44,19 @@ class RedactingFormatter(logging.Formatter):
         record.msg = filter_datum(self.fields, self.REDACTION,
                                   record.msg, self.SEPARATOR)
         return super().format(record)
+
+
+def get_logger() -> logging.Logger:
+    """
+    returns logging object
+    """
+    logging = logging.getlogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    stream_handler = logging.StreamHandler()
+    redacting_formatter = RedactingFormatter(list(PII_FIELDS))
+    stream_handler.setFormatter(redacting_Formatter)
+    logger.addHandler(stream_handler)
+
+    return logger
