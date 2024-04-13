@@ -72,6 +72,35 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             user=os.environ.get("PERSONAL_DATA_DB_USERNAME", "root"),
             password=os.environ.get("PERSONAL_DATA_DB_PASSWORD", ""),
             host=os.environ.get("PERSONAL_DATA_DB_HOST", "localhost"),
-            db_name=os.environ.get("PERSONAL_DATA_DB_NAME")
+            database=os.environ.get("PERSONAL_DATA_DB_NAME")
             )
     return mydb
+
+
+def main():
+    """
+    obtains database connection and retrieves all rows in user table
+    then displays each row under filtered format
+    """
+
+    db = get_db()
+
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    names = [i[0] for i in cursor.description]
+
+    logger = get_logger()
+
+    for row in cursor:
+        row_str = ''.join(f"{f}={str(r)}; " for r, f in zip(row, names))
+        logger.info(row_str.strip())
+
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    """
+    runs the main function
+    """
+    main()
