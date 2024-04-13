@@ -2,9 +2,11 @@
 """
 Log filtering with regex
 """
+import os
 import re
 from typing import List, Tuple
 import logging
+import mysql.connector
 
 
 PII_FIELDS: Tuple[str, ...] = ('name', 'email', 'phone', 'ssn', 'password')
@@ -60,3 +62,16 @@ def get_logger() -> logging.Logger:
     logger.addHandler(stream_handler)
 
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    returns connector to mysql database
+    """
+    mydb = mysql.connector.connect(
+            user=os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
+            password=os.environ.get('PERSONAL_DATA_DB_PASSWORD', "")
+            host=os.environ.get('PERSONAL_DATA_DB_HOST', "localhost")
+            db_name=os.environ.get('PERSONAL_DATA_DB_NAME')
+            )
+    return mydb
