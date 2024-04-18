@@ -89,18 +89,8 @@ class BasicAuth(Auth):
         retrieves user instance for request with basic authentication
         """
         encoded = self.authorization_header(request)
-
         encoded_user = self.extract_base64_authorization_header(encoded)
-
-        if not encoded_user:
-            return None
         decoded_user = self.decode_base64_authorization_header(encoded_user)
-
-        if not decoded_user:
-            return None
         email, pwd = self.extract_user_credentials(decoded_user)
-
-        if not email or not pwd:
-            return None
         user = self.user_object_from_credentials(email, pwd)
         return user
