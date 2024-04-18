@@ -5,18 +5,14 @@ Basic Authentication
 
 from api.v1.auth.auth import Auth
 import base64
+from models.user import User
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
     """
     inherits from class Auth
     """
-    def __init__(self):
-        """
-        initialization
-        """
-        super().__init__()
-        pass
 
     def extract_base64_authorization_header(self,
                                             authorization_header: str) -> str:
@@ -67,3 +63,44 @@ class BasicAuth(Auth):
             return None, None
         credentials = decoded_base64_authorization_header.split(':', 1)
         return credentials[0], credentials[1]
+
+    def user_object_from_credentials(self, user_email: str,
+                                     user_pwd: str) -> TypeVar('User'):
+        """
+        returns user instance based on email and password
+        """
+        if user_email is None or not isinstance(user_email, str):
+            return None
+        if user_pwd is None or not isinstance(user_pwd, str):
+            return None
+        try:
+            exist_user = User.search({'email': user_email})
+
+        except Exception as e:
+            return None
+
+        for user in exist_user:
+            if user.is_valid_password(user_pwd):
+                return user
+        return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        retrieves user instance for request with basic authentication
+        """
+        encoded = self.authorization_header(request)
+
+        encoded_user = self.extract_base64_authorization_header(encoded)
+
+        if not encoded_user:
+            return None
+        decoded_user = self.decode_base64_authorization_header(encoded_user)
+
+        if not decoded_user:
+            return None
+        email, pwd = self.extract_user_credentials(decoded_user)
+
+        if not email or not pwd:
+            return None
+        user = self.user_object_from_credentials(email, pwd)
+        return user
