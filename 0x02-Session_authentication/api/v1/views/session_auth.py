@@ -35,7 +35,7 @@ def login() -> str:
             return jsonify({"error": "wrong password"}), 401
 
     from api.v1.app import auth
-    print(f"user found is {user_found}")
+
     user = user_found[0]
     session_id = auth.create_session(user.id)
 
