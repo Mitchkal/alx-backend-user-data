@@ -32,7 +32,7 @@ class SessionAuth(Auth):
         user_id = self.user_id_by_session_id.get(session_id)
         return user_id
 
-    def current_user(self, request=None):
+    def current_user(self, request=None) -> str:
         """
         return User instance based on cookie value
         """
