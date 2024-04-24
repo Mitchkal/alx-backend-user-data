@@ -3,9 +3,11 @@
 Basic flask implementation
 """
 
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, request
+from auth import Auth
 
 
+Auth = Auth()
 app = Flask(__name__)
 
 
@@ -14,7 +16,24 @@ def index() -> str:
     """
     index module
     """
-    return jsonify({"message": "BienVenue"})
+    return jsonify({"message": "Bienvenue"})
+
+
+@app.route("/users", methods=["POST"], strict_slashes=False)
+def users() -> str:
+    """
+    endpoint o register user
+    """
+
+    email = request.form.get("email", type=str)
+    password = request.form.get("password", type=str)
+
+    try:
+        Auth.register_user(email, password)
+        return jsonify({"email": email, "message": "user created"})
+
+    except ValueError as err:
+        return jsonify({"message": "email already registered"}), 400
 
 
 if __name__ == "__main__":
