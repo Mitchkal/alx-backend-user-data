@@ -37,12 +37,12 @@ def users() -> str:
 
 
 @app.route('/sessions', methods=["POST"], strict_slashes=False)
-def log_in() -> str:
+def login() -> str:
     """
     endpoint for the login session
     """
-    email = request.form.get("email", type=str)
-    password = request.form.get("password", type=str)
+    email = request.form.get("email")
+    password = request.form.get("password")
 
     if email is None or password is None:
         abort(400)
@@ -50,6 +50,7 @@ def log_in() -> str:
     if Auth.valid_login(email, password):
         session_id = Auth.create_session(email)
         res = jsonify({"email": email, "message": "logged in"})
+
         res.set_cookie("session_id", session_id)
         return res
     abort(401)
