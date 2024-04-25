@@ -99,9 +99,13 @@ def profile() -> str:
 def get_reset_password_token() -> str:
     """
     endpoint to reset password
+    if unregistered email respond with 403 ststus code
+    else generate token and respond with 200 code
+    and json payload
     """
-    email = request.form.get("email")
-    if email is None:
+    try:
+        email = request.form["email"]
+    except KeyError:
         abort(403)
 
     try:
