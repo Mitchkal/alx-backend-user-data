@@ -68,9 +68,3 @@ class Auth:
             return True
 
         return False
-
-    def _generate_uuid(self) -> str:
-        """
-        generates a new uuid
-        """
-        return str(uuid4())
