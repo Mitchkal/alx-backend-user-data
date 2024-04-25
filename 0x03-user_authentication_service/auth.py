@@ -19,6 +19,13 @@ def _hash_password(password: str) -> bytes:
     return hashed
 
 
+def _generate_uuid() -> str:
+    """
+    generates a new uuid in string format
+    """
+    return str(uuid4())
+
+
 class Auth:
     """
     Auth class to interact with authentication database
@@ -68,10 +75,3 @@ class Auth:
             return True
 
         return False
-
-    def __generate_uuid(self) -> str:
-        """
-        generates a uuid
-        """
-        uuid_id = str(uuid4())
-        return uuid_id
