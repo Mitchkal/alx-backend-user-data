@@ -41,15 +41,15 @@ def login() -> str:
     """
     endpoint for the login session
     """
-    if email is None or password is None:
-        abort(401)
-
     email = request.form.get("email", type=str)
     password = request.form.get("password", type=str)
 
-    if Auth.valid_login(email, password) is True:
+    if email is None or password is None:
+        abort(401)
+
+    if Auth.valid_login(email, password):
         session_id = Auth.create_session(email)
-        res = make_response({"email": email, "message": "logged in"})
+        res = jsonify({"email": email, "message": "logged in"})
         res.set_cookie("session_id", session_id)
         return res
     abort(401)
