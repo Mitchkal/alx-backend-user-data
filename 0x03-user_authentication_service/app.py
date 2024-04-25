@@ -3,7 +3,7 @@
 Basic flask implementation
 """
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response, abort
 from auth import Auth
 
 
@@ -34,6 +34,22 @@ def users() -> str:
 
     except ValueError as err:
         return jsonify({"message": "email already registered"}), 400
+
+
+@app.route('/sessions', methods=["POST"], strict_slashes=False)
+def login() -> str:
+    """
+    endpoint for the login session
+    """
+    email = request.form.get("email", type=str)
+    password = request.form.get("password", type=str)
+
+    if Auth.valid_login(email, password) is True:
+        session_id = Auth.create_session(email)
+        res = make_response({"email": email, "message": "logged in"})
+        res.set_cookie("session_id", session_id)
+        return res
+    abort(401)
 
 
 if __name__ == "__main__":
