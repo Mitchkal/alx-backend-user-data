@@ -44,7 +44,7 @@ def login() -> str:
     email = request.form.get("email", '')
     password = request.form.get("password", '')
 
-    if email is None or password is None:
+    if email == '' or password == '':
         abort(400)
 
     if Auth.valid_login(email, password):
@@ -74,7 +74,9 @@ def logout() -> str:
 
     Auth.destroy_session(user.id)
 
-    return redirect('/')
+    response = redirect('/')
+    response.delete_cookie("session_id")
+    return response
 
 
 @app.route('/profile', methods=['GET'], strict_slashes=False)
@@ -87,9 +89,7 @@ def profile() -> str:
     if session_id is not None:
         user = Auth.get_user_from_session_id(session_id)
 
-        if user is None:
-            abort(403)
-        else:
+        if user is not None:
             return jsonify({"email": user.email}), 200
 
     abort(403)
