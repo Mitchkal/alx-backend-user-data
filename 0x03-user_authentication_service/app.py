@@ -3,7 +3,7 @@
 Basic flask implementation
 """
 
-from flask import Flask, jsonify, request, make_response, abort
+from flask import Flask, jsonify, request, make_response, abort, redirect
 from auth import Auth
 
 
@@ -74,7 +74,7 @@ def logout() -> str:
 
     Auth.destroy_session(user.id)
 
-    return redirect("/", code=302)
+    return redirect("/")
 
 
 if __name__ == "__main__":
