@@ -41,8 +41,8 @@ def login() -> str:
     """
     endpoint for the login session
     """
-    email = request.form.get("email")
-    password = request.form.get("password")
+    email = request.form.get("email", '')
+    password = request.form.get("password", '')
 
     if email is None or password is None:
         abort(400)
@@ -74,7 +74,7 @@ def logout() -> str:
 
     Auth.destroy_session(user.id)
 
-    return redirect("/")
+    return redirect('/')
 
 
 @app.route('/profile', methods=['GET'], strict_slashes=False)
@@ -82,7 +82,7 @@ def profile() -> str:
     """
     endpoint for the user profile
     """
-    session_id = request.cookies.get('session_id')
+    session_id = request.cookies.get('session_id', None)
 
     if session_id is not None:
         user = Auth.get_user_from_session_id(session_id)
