@@ -96,11 +96,11 @@ def profile() -> str:
 
 
 @app.route('/reset_password', methods=['POST'], strict_slashes=False)
-def reset_password() -> str:
+def get_reset_password_token() -> str:
     """
     endpoint to reset password
     """
-    email = request.forms.get("email")
+    email = request.form.get("email")
     if email is None:
         abort(403)
 
