@@ -36,7 +36,7 @@ def users() -> str:
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route('/sessions', methods=["POST"], strict_slashes=False)
+@app.route('/sessions', methods=["POST"])
 def login() -> str:
     """
     endpoint for the login session
@@ -56,7 +56,7 @@ def login() -> str:
     abort(401)
 
 
-@app.route('/sessions', methods=["DELETE"], strict_slashes=False)
+@app.route('/sessions', methods=["DELETE"])
 def logout() -> str:
     """
     responds to the sessions route by destroying session id
