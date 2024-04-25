@@ -41,6 +41,9 @@ def login() -> str:
     """
     endpoint for the login session
     """
+    if email is None or password is None:
+        abort(401)
+
     email = request.form.get("email", type=str)
     password = request.form.get("password", type=str)
 
